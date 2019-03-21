@@ -39,7 +39,7 @@ namespace Net.Sgoliver.NRtfTree.Test
     [TestFixture]
     public class RtfDocumentTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitTestFixture()
         {
             ;

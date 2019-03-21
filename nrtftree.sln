@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nrtftree-library", "nrtftree-library\nrtftree-library.csproj", "{7114E863-9D7D-4507-B38B-B859A0C1B836}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nrtftree-test", "nrtftree-test\nrtftree-test.csproj", "{932E07AC-75B1-4F13-8998-3CA4EAEE8E79}"
@@ -55,5 +57,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F6B17017-FC6F-4992-8411-DB42CD80D881} = {A199A5CB-BF3B-4223-98F2-D35739015480}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84A1716A-BD8A-44B6-AFB4-3EA7A6DAD499}
 	EndGlobalSection
 EndGlobal

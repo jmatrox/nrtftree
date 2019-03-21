@@ -36,7 +36,7 @@ namespace Net.Sgoliver.NRtfTree.Test
     [TestFixture]
     public class SelectNodesTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitTestFixture()
         {
             ;

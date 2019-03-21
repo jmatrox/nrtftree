@@ -36,7 +36,7 @@ namespace Net.Sgoliver.NRtfTree.Test
     [TestFixture]
     public class MergeTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitTestFixture()
         {
             ;

@@ -39,7 +39,7 @@ namespace Net.Sgoliver.NRtfTree.Test
     [TestFixture]
     public class ImageNodeTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitTestFixture()
         {
 

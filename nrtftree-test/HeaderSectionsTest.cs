@@ -40,7 +40,7 @@ namespace Net.Sgoliver.NRtfTree.Test
     {
         RtfTree tree = null;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitTestFixture()
         {
             tree = new RtfTree();
