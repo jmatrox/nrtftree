@@ -126,9 +126,9 @@ namespace Net.Sgoliver.NRtfTree
             /// <summary>
             /// Índice del estilo cuyo nombre es el pasado como parámetro.
             /// </summary>
-            /// <param name="name">Nombre del estilo buscado.</param>
+            /// <param name="style">Nombre del estilo buscado.</param>
             /// <returns>Estilo cuyo nombre es el pasado como parámetro.</returns>
-            public int IndexOf(string name)
+            public int IndexOf(RtfStyleSheet style)
             {
                 int intIndex = -1;
                 IEnumerator fntIndex = stylesheets.GetEnumerator();
@@ -136,7 +136,7 @@ namespace Net.Sgoliver.NRtfTree
                 fntIndex.Reset();
                 while (fntIndex.MoveNext())
                 {
-                    if (((KeyValuePair<int, RtfStyleSheet>)fntIndex.Current).Value.Name.Equals(name))
+                    if (((KeyValuePair<int, RtfStyleSheet>)fntIndex.Current).Value.Equals(style))
                     {
                         intIndex = (int)((KeyValuePair<int, RtfStyleSheet>)fntIndex.Current).Key;
                         break;
@@ -164,6 +164,21 @@ namespace Net.Sgoliver.NRtfTree
 
                 return (intIndex + 1);
             }
+
+            #region ILB
+
+            public override string ToString()
+            {
+                string res = "{\\stylesheet";
+
+                for (int i = 0; i < stylesheets.Count; i++)
+                    res += $"{{{stylesheets[i].ToString()}}}";
+
+                res += "}";
+                return res;
+            }
+
+            #endregion
         }
     }
 }

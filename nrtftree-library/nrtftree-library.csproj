@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>nrtftree_library</RootNamespace>
     <AssemblyName>nrtftree-library</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -43,10 +43,12 @@
     <Compile Include="InfoGroup.cs" />
     <Compile Include="ObjectNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RtfAdjust.cs" />
     <Compile Include="RtfCharFormat.cs" />
     <Compile Include="RtfColorTable.cs" />
     <Compile Include="RtfDocument.cs" />
     <Compile Include="RtfDocumentFormat.cs" />
+    <Compile Include="RtfFont.cs" />
     <Compile Include="RtfFontTable.cs" />
     <Compile Include="RtfLex.cs" />
     <Compile Include="RtfMerger.cs" />
@@ -64,6 +66,10 @@
     <Compile Include="RtfTreeNode.cs" />
     <Compile Include="SarParser.cs" />
     <Compile Include="TextAlignment.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CreaNuGetPkg.bat" />
+    <None Include="nrtftree-library.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -271,6 +271,8 @@ namespace Net.Sgoliver.NRtfTree
                     //Se combinan las tablas de fuentes y se ajustan las fuentes del documento a insertar
                     mainAdjustFont(docToInsert);
 
+                    mainAdjustStyle(docToInsert);
+
                     //Se elimina la información de cabecera del documento a insertar (colores, fuentes, info, ...)
                     cleanToInsertDoc(docToInsert);
 
@@ -312,23 +314,41 @@ namespace Net.Sgoliver.NRtfTree
             /// Obtiene el código de la fuente pasada como parámetro, insertándola en la tabla de fuentes si es necesario.
             /// </summary>
             /// <param name="fontDestTbl">Tabla de fuentes resultante.</param>
-            /// <param name="sFontName">Fuente buscada.</param>
+            /// <param name="font">Fuente buscada.</param>
             /// <returns></returns>
-            private int getFontID(ref RtfFontTable fontDestTbl, string sFontName)
+            private int getFontID(ref RtfFontTable fontDestTbl, RtfFont font)
             {
                 int iExistingFontID = -1;
 
-                if ((iExistingFontID = fontDestTbl.IndexOf(sFontName)) == -1)
+                if ((iExistingFontID = fontDestTbl.IndexOf(font)) == -1)
                 {
-                    fontDestTbl.AddFont(sFontName);
-                    iExistingFontID = fontDestTbl.IndexOf(sFontName);
+                    fontDestTbl.AddFont(font);
+                    iExistingFontID = fontDestTbl.IndexOf(font);
 
                     RtfNodeCollection nodeListToInsert = baseRtfDoc.RootNode.SelectNodes("fonttbl");
 
                     RtfTreeNode ftFont = new RtfTreeNode(RtfNodeType.Group);
                     ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "f", true, iExistingFontID));
-                    ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fnil", false, 0));
-                    ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Text, sFontName + ";", false, 0));
+
+                    switch (font.Family)
+                    {
+                        case RtfFontFamilies.Nil: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fnil", false, 0)); break;
+                        case RtfFontFamilies.Roman: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "froman", false, 0)); break;
+                        case RtfFontFamilies.Swiss: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fswiss", false, 0)); break;
+                        case RtfFontFamilies.Modern: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fmodern", false, 0)); break;
+                        case RtfFontFamilies.Script: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fscript", false, 0)); break;
+                        case RtfFontFamilies.Decor:ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fdecor", false, 0)); break;
+                        case RtfFontFamilies.Tech: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "ftech", false, 0)); break;
+                        case RtfFontFamilies.Bidi: ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fbidi", false, 0)); break;
+                    }
+
+                    if (font.Charset >= 0) ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fcharset", true, font.Charset));
+                    if (font.Prq >= 0) ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "fprq", true, font.Prq));
+
+                    for (int i = 0; i < font.Formatting.Count; i++)
+                        ftFont.AppendChild(font.Formatting[i].CloneNode());
+
+                    ftFont.AppendChild(new RtfTreeNode(RtfNodeType.Text, font.Name + ";", false, 0));
                     
                     nodeListToInsert[0].ParentNode.AppendChild(ftFont);
                 }
@@ -366,7 +386,7 @@ namespace Net.Sgoliver.NRtfTree
             /// Ajusta las fuentes del documento a insertar.
             /// </summary>
             /// <param name="docToInsert">Documento a insertar.</param>
-            private void mainAdjustFont(RtfTree docToInsert)
+            protected void mainAdjustFont(RtfTree docToInsert)
             {
                 RtfFontTable fontDestTbl = baseRtfDoc.GetFontTable();
                 RtfFontTable fontToCopyTbl = docToInsert.GetFontTable();
@@ -408,7 +428,7 @@ namespace Net.Sgoliver.NRtfTree
             /// Ajusta los colores del documento a insertar.
             /// </summary>
             /// <param name="docToInsert">Documento a insertar.</param>
-            private void mainAdjustColor(RtfTree docToInsert)
+            protected void mainAdjustColor(RtfTree docToInsert)
             {
                 RtfColorTable colorDestTbl = baseRtfDoc.GetColorTable();
                 RtfColorTable colorToCopyTbl = docToInsert.GetColorTable();
@@ -505,7 +525,85 @@ namespace Net.Sgoliver.NRtfTree
                 }
             }
 
+            protected void mainAdjustStyle(RtfTree docToInsert)
+            {
+                RtfStyleSheetTable styleSheetTableDest = baseRtfDoc.GetStyleSheetTable();
+                RtfStyleSheetTable styleSheetTableToCopy = docToInsert.GetStyleSheetTable();
+
+                adjustStyleRecursive(docToInsert.RootNode, styleSheetTableDest, styleSheetTableToCopy);
+            }
+
+            private void adjustStyleRecursive(RtfTreeNode parentNode, RtfStyleSheetTable styleSheetTableDest, RtfStyleSheetTable styleSheetTableToCopy)
+            {
+                if (parentNode != null && parentNode.HasChildNodes())
+                {
+                    for (int iNdIndex = 0; iNdIndex < parentNode.ChildNodes.Count; iNdIndex++)
+                    {
+                        if (parentNode.ChildNodes[iNdIndex].NodeType == RtfNodeType.Keyword &&
+                            (parentNode.ChildNodes[iNdIndex].NodeKey == "cs" ||
+                            parentNode.ChildNodes[iNdIndex].NodeKey == "s" ||
+                            parentNode.ChildNodes[iNdIndex].NodeKey == "ds" ||
+                            parentNode.ChildNodes[iNdIndex].NodeKey == "ts") &&
+                            parentNode.ChildNodes[iNdIndex].HasParameter)
+                        {
+                            parentNode.ChildNodes[iNdIndex].Parameter = getStyleID(ref styleSheetTableDest, styleSheetTableToCopy[parentNode.ChildNodes[iNdIndex].Parameter]);
+                        }
+
+                        adjustStyleRecursive(parentNode.ChildNodes[iNdIndex], styleSheetTableDest, styleSheetTableToCopy);
+                    }
+                }
+            }
+
+            private int getStyleID(ref RtfStyleSheetTable styleSheetTableDest, RtfStyleSheet style)
+            {
+                int iExistingFontID = -1;
+
+                if ((iExistingFontID = styleSheetTableDest.IndexOf(style)) == -1)
+                {
+                    styleSheetTableDest.AddStyleSheet(style);
+                    iExistingFontID = style.Index;
+
+                    RtfNodeCollection nodeListToInsert = baseRtfDoc.RootNode.SelectNodes("stylesheet");
+
+                    RtfTreeNode nodeStyle = new RtfTreeNode(RtfNodeType.Group);
+
+                    if (style.Index > 0)
+                    {
+                        switch (style.Type)
+                        {
+                            case RtfStyleSheetType.Character: nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "cs", true, style.Index)); break;
+                            case RtfStyleSheetType.Paragraph: nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "s", true, style.Index)); break;
+                            case RtfStyleSheetType.Section: nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "ds", true, style.Index)); break;
+                            case RtfStyleSheetType.Table: nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "ts", true, style.Index)); break;
+                        }
+                    }
+
+                    if (style.Additive) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "additive", false, 0));
+                    if (style.BasedOn >= 0) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "sbasedon", true, style.BasedOn));
+                    if (style.Next >= 0) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "snext", true, style.Next));
+                    if (style.AutoUpdate) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "sautoupd", false, 0));
+                    if (style.Hidden) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "shidden", false, 0));
+                    if (style.Link >= 0) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "slink", true, style.Link));
+                    if (style.Locked) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "slocked", false, 0));
+                    if (style.Personal) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "spersonal", false,0));
+                    if (style.Compose) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "scompose", false, 0));
+                    if (style.Reply) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "sreply", false,0));
+                    if (style.Styrsid >= 0) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "styrsid", true, style.Styrsid));
+                    if (style.SemiHidden) nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Keyword, "ssemihidden", false, 0));
+
+                    for (int i = 0; i < style.Formatting.Count; i++)
+                        nodeStyle.AppendChild(style.Formatting[i].CloneNode());
+
+                    nodeStyle.AppendChild(new RtfTreeNode(RtfNodeType.Text, style.Name + ";", false, 0));
+
+                    nodeListToInsert[0].ParentNode.AppendChild(nodeStyle);
+                }
+
+                return iExistingFontID;
+            }
+
             #endregion
+
         }
     }
 }

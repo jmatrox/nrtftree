@@ -353,7 +353,7 @@ namespace Net.Sgoliver.NRtfTree
 
                                 case "f": //Tipo de fuente                                
                                     if (nodo.Parameter < _fontTable.Count)
-                                        _currentFormat.FontName = _fontTable[nodo.Parameter];
+                                        _currentFormat.FontName = _fontTable[nodo.Parameter].Name;
                                     break;
 
                                 case "cf": //Color de fuente

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>nrtftree-library</id>
+        <version>0.4.2</version>
+        <title>nrtftree-library</title>
+        <authors>Salvador Gomez</authors>
+        <owners>cemento</owners>
+        <licenseUrl>https://www.gnu.org/licenses/lgpl.html</licenseUrl>
+        <projectUrl>https://github.com/sgolivernet/nrtftree</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>NRtfTree Library is a set of classes written entirely in C# that may be used to manage RTF documents in your own applications. 
+
+NRtfTree is licensed under The GNU Lesser General Public License (LGPLv3).
+NRtfTree will help you:
+
+* Open and parse RTF files.
+* Analyze the content of RTF files.
+* Add, modify and remove document elements (i.e. text, control words, control symbols).
+* Create new RTF documents.
+
+You can find up-to-date information about NRtfTree Library at:
+
+http://www.sgoliver.net/blog/?page_id=3568</description>
+        <summary>NRtfTree Library is a set of classes written entirely in C# that may be used to manage RTF documents in your own applications.</summary>
+        <releaseNotes />
+        <copyright>2006-2013 Salvador Gomez</copyright>
+        <tags>RTF nrtftree-library NRtfTree</tags>
+    </metadata>
+  <files>
+    <file src="bin\Release\nrtftree-library.*" target="lib\net40" />
+  </files>
+</package>

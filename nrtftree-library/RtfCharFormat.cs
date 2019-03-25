@@ -57,7 +57,7 @@ namespace Net.Sgoliver.NRtfTree
             /// <summary>
             /// Nombre de la fuente.
             /// </summary>
-            private string font = "Arial";
+            private RtfFont font = new RtfFont { Name = "Arial" };
 
             /// <summary>
             /// Tamaño de la fuente.
@@ -103,7 +103,7 @@ namespace Net.Sgoliver.NRtfTree
             /// <summary>
             /// Tipo de fuente.
             /// </summary>
-            public string Font
+            public RtfFont Font
             {
                 get { return font; }
                 set { font = value; }

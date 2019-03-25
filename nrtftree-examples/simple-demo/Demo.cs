@@ -236,49 +236,49 @@ namespace Net.Sgoliver.NRtfTree
 
             public static void ExtractDocumentOutline()
             {
-                RtfTree tree = new RtfTree();
-                tree.LoadRtfFile("..\\..\\testdocs\\test-doc.rtf");
+                //RtfTree tree = new RtfTree();
+                //tree.LoadRtfFile("..\\..\\testdocs\\test-doc.rtf");
 
-                RtfStyleSheetTable sst = tree.GetStyleSheetTable();
+                //RtfStyleSheetTable sst = tree.GetStyleSheetTable();
 
-                int heading1 = sst.IndexOf("heading 1");
-                int heading2 = sst.IndexOf("heading 2");
-                int heading3 = sst.IndexOf("heading 3");
+                //int heading1 = sst.IndexOf("heading 1");
+                //int heading2 = sst.IndexOf("heading 2");
+                //int heading3 = sst.IndexOf("heading 3");
 
-                tree.MainGroup.RemoveChild(tree.MainGroup.SelectChildGroups("stylesheet")[0]);
+                //tree.MainGroup.RemoveChild(tree.MainGroup.SelectChildGroups("stylesheet")[0]);
 
-                RtfNodeCollection headingKeywords = tree.MainGroup.SelectNodes("s");
+                //RtfNodeCollection headingKeywords = tree.MainGroup.SelectNodes("s");
 
-                for (int i = 0; i < headingKeywords.Count; i++)
-                {
-                    RtfTreeNode hk = headingKeywords[i];
+                //for (int i = 0; i < headingKeywords.Count; i++)
+                //{
+                //    RtfTreeNode hk = headingKeywords[i];
 
-                    StringBuilder text = new StringBuilder("");
+                //    StringBuilder text = new StringBuilder("");
 
-                    if (hk.Parameter == heading1 ||
-                        hk.Parameter == heading2 ||
-                        hk.Parameter == heading3)
-                    {
-                        RtfTreeNode sibling = hk.NextSibling;
+                //    if (hk.Parameter == heading1 ||
+                //        hk.Parameter == heading2 ||
+                //        hk.Parameter == heading3)
+                //    {
+                //        RtfTreeNode sibling = hk.NextSibling;
 
-                        while (sibling != null && !sibling.NodeKey.Equals("pard"))
-                        {
-                            if (sibling.NodeType == RtfNodeType.Text)
-                                text.Append(sibling.NodeKey);
-                            else if (sibling.NodeType == RtfNodeType.Group)
-                                text.Append(ExtractGroupText(sibling));
+                //        while (sibling != null && !sibling.NodeKey.Equals("pard"))
+                //        {
+                //            if (sibling.NodeType == RtfNodeType.Text)
+                //                text.Append(sibling.NodeKey);
+                //            else if (sibling.NodeType == RtfNodeType.Group)
+                //                text.Append(ExtractGroupText(sibling));
 
-                            sibling = sibling.NextSibling;
-                        }
+                //            sibling = sibling.NextSibling;
+                //        }
 
-                        if (hk.Parameter == heading1)
-                            Console.WriteLine("H1: {0}", text);
-                        else if (hk.Parameter == heading2)
-                            Console.WriteLine("    H2: {0}", text);
-                        else if (hk.Parameter == heading3)
-                            Console.WriteLine("        H3: {0}", text);
-                    }
-                }
+                //        if (hk.Parameter == heading1)
+                //            Console.WriteLine("H1: {0}", text);
+                //        else if (hk.Parameter == heading2)
+                //            Console.WriteLine("    H2: {0}", text);
+                //        else if (hk.Parameter == heading3)
+                //            Console.WriteLine("        H3: {0}", text);
+                //    }
+                //}
             }
 
             private static void ExtractHyperlinks()

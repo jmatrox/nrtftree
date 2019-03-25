@@ -41,33 +41,37 @@ namespace Net.Sgoliver.NRtfTree
             /// <summary>
             /// Lista interna de fuentes.
             /// </summary>
-            private Dictionary<int,string> fonts;
+            private Dictionary<int,RtfFont> fonts;
 
             /// <summary>
             /// Constructor de la clase RtfFontTable.
             /// </summary>
             public RtfFontTable()
             {
-                fonts = new Dictionary<int,string>();
+                fonts = new Dictionary<int, RtfFont>();
             }
 
             /// <summary>
             /// Inserta un nueva fuente en la tabla de fuentes.
             /// </summary>
-            /// <param name="name">Nueva fuente a insertar.</param>
-            public void AddFont(string name)
+            /// <param name="font">Nueva fuente a insertar.</param>
+            public void AddFont(RtfFont font)
             {
-                fonts.Add(newFontIndex(),name);
+                font.Index = newFontIndex();
+
+                fonts.Add(font.Index,font);
             }
 
             /// <summary>
             /// Inserta un nueva fuente en la tabla de fuentes.
             /// </summary>
             /// <param name="index">Indice de la fuente a insertar.</param>
-            /// <param name="name">Nueva fuente a insertar.</param>
-            public void AddFont(int index, string name)
+            /// <param name="font">Nueva fuente a insertar.</param>
+            public void AddFont(int index, RtfFont font)
             {
-                fonts.Add(index, name);
+                font.Index = index;
+
+                fonts.Add(index, font);
             }
 
             /// <summary>
@@ -75,7 +79,7 @@ namespace Net.Sgoliver.NRtfTree
             /// </summary>
             /// <param name="index">Indice de la fuente a recuperar.</param>
             /// <returns>Fuente n-ésima de la tabla de fuentes.</returns>
-            public string this[int index]
+            public RtfFont this[int index]
             {
                 get
                 {
@@ -97,9 +101,9 @@ namespace Net.Sgoliver.NRtfTree
             /// <summary>
             /// Obtiene el índice de una fuente determinado en la tabla.
             /// </summary>
-            /// <param name="name">Fuente a consultar.</param>
+            /// <param name="font">Fuente a consultar.</param>
             /// <returns>Indice de la fuente consultada.</returns>
-            public int IndexOf(string name)
+            public int IndexOf(RtfFont font)
             {
                 int intIndex = -1;
                 IEnumerator fntIndex = fonts.GetEnumerator();
@@ -107,9 +111,9 @@ namespace Net.Sgoliver.NRtfTree
                 fntIndex.Reset();
                 while (fntIndex.MoveNext())
                 {
-                    if (((KeyValuePair<int,string>)fntIndex.Current).Value.Equals(name))
+                    if (((KeyValuePair<int,RtfFont>)fntIndex.Current).Value.Equals(font))
                     {
-                        intIndex = (int)((KeyValuePair<int, string>)fntIndex.Current).Key;
+                        intIndex = (int)((KeyValuePair<int, RtfFont>)fntIndex.Current).Key;
                         break;
                     }
                 }
@@ -129,8 +133,8 @@ namespace Net.Sgoliver.NRtfTree
                 fntIndex.Reset();
                 while (fntIndex.MoveNext())
                 {
-                    if ((int)((KeyValuePair<int, string>)fntIndex.Current).Key > intIndex)
-                        intIndex = (int)((KeyValuePair<int, string>)fntIndex.Current).Key;
+                    if ((int)((KeyValuePair<int, RtfFont>)fntIndex.Current).Key > intIndex)
+                        intIndex = (int)((KeyValuePair<int, RtfFont>)fntIndex.Current).Key;
                 }
 
                 return (intIndex + 1);

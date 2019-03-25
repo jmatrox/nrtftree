@@ -92,7 +92,11 @@ namespace Net.Sgoliver.NRtfTree
                 encoding = enc;
 
                 fontTable = new RtfFontTable();
-                fontTable.AddFont("Arial");  //Default font
+
+                RtfFont font = new RtfFont();
+                font.Name = "Arial";
+
+                fontTable.AddFont(font);  //Default font
 
                 colorTable = new RtfColorTable();
                 colorTable.AddColor(Color.Black);  //Default color
@@ -496,7 +500,7 @@ namespace Net.Sgoliver.NRtfTree
             /// Establece el tipo de letra actual.
             /// </summary>
             /// <param name="val">Tipo de letra.</param>
-            public void SetFormatFont(string val)
+            public void SetFormatFont(RtfFont val)
             {
                 if (currentFormat.Font != val)
                 {

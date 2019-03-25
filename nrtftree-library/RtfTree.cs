@@ -241,19 +241,9 @@ namespace Net.Sgoliver.NRtfTree
                 {
                     RtfTreeNode fuente = ntf.ChildNodes[j];
 
-                    int indiceFuente = -1;
-                    string nombreFuente = null;
+                    RtfFont rtfFont = ParseFont(fuente);
 
-                    foreach (RtfTreeNode nodo in fuente.ChildNodes)
-                    {
-                        if (nodo.NodeKey == "f")
-                            indiceFuente = nodo.Parameter;
-
-                        if (nodo.NodeType == RtfNodeType.Text)
-                            nombreFuente = nodo.NodeKey.Substring(0, nodo.NodeKey.Length - 1);
-                    }
-
-                    tablaFuentes.AddFont(indiceFuente, nombreFuente);
+                    tablaFuentes.AddFont(rtfFont.Index, rtfFont);
                 }
 
                 return tablaFuentes;
@@ -805,6 +795,70 @@ namespace Net.Sgoliver.NRtfTree
                     else
                     {
                         if(node.NodeKey != "*")
+                            rss.Formatting.Add(node);
+                    }
+                }
+
+                return rss;
+            }
+
+            private RtfFont ParseFont(RtfTreeNode fontNode)
+            {
+                RtfFont rss = new RtfFont();
+
+                foreach (RtfTreeNode node in fontNode.ChildNodes)
+                {
+                    if (node.NodeKey == "f")
+                    {
+                        rss.Index = node.Parameter;
+                    }
+                    else if (node.NodeKey == "fnil")
+                    {
+                        rss.Family = RtfFontFamilies.Nil;
+                    }
+                    else if (node.NodeKey == "froman")
+                    {
+                        rss.Family = RtfFontFamilies.Roman;
+                    }
+                    else if (node.NodeKey == "fswiss")
+                    {
+                        rss.Family = RtfFontFamilies.Swiss;
+                    }
+                    else if (node.NodeKey == "fmodern")
+                    {
+                        rss.Family = RtfFontFamilies.Modern;
+                    }
+                    else if (node.NodeKey == "fscript")
+                    {
+                        rss.Family = RtfFontFamilies.Script;
+                    }
+                    else if (node.NodeKey == "fdecor")
+                    {
+                        rss.Family = RtfFontFamilies.Decor;
+                    }
+                    else if (node.NodeKey == "ftech")
+                    {
+                        rss.Family = RtfFontFamilies.Tech;
+                    }
+                    else if (node.NodeKey == "fbidi")
+                    {
+                        rss.Family = RtfFontFamilies.Bidi;
+                    }
+                    else if (node.NodeKey == "fcharset")
+                    {
+                        rss.Charset = node.Parameter;
+                    }
+                    else if (node.NodeKey == "fprq")
+                    {
+                        rss.Prq = node.Parameter;
+                    }
+                    else if (node.NodeType == RtfNodeType.Text)
+                    {
+                        rss.Name = node.NodeKey.Substring(0, node.NodeKey.Length - 1);
+                    }
+                    else
+                    {
+                        if (node.NodeKey != "*")
                             rss.Formatting.Add(node);
                     }
                 }

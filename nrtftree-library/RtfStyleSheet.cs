@@ -228,6 +228,92 @@ namespace Net.Sgoliver.NRtfTree
             }
 
             #endregion
+
+            #region ILB
+
+            public override string ToString()
+            {
+                string res = string.Empty;
+
+                if (Index > 0)
+                {
+                    switch (type)
+                    {
+                        case RtfStyleSheetType.Character: res += $"\\cs{Index}"; break;
+                        case RtfStyleSheetType.Paragraph: res += $"\\s{Index}"; break;
+                        case RtfStyleSheetType.Section: res += $"\\ds{Index}"; break;
+                        case RtfStyleSheetType.Table: res += $"\\ts{Index}"; break;
+                    }
+                }
+
+                if (Additive) res += "\\additive";
+                if (BasedOn >= 0) res += $"\\sbasedon{BasedOn}";
+                if (Next >= 0) res += $"\\snext{Next}";
+                if (AutoUpdate) res += "\\sautoupd";
+                if (Hidden) res += "\\shidden";
+                if (Link >= 0) res += $"\\slink{Link}";
+                if (Locked) res += "\\slocked";
+                if (Personal) res += "\\spersonal";
+                if (Compose) res += "\\scompose";
+                if (Reply) res += "\\sreply";
+                if (Styrsid >= 0) res += $"\\styrsid{Styrsid}";
+                if (SemiHidden) res += "\\ssemihidden";
+
+                for (int i = 0; i < formatting.Count; i++)
+                    res += formatting[i].Rtf;
+
+                res += $" {Name};";
+
+                return res;
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is RtfStyleSheet style)
+                {
+                    string fontFormatting = string.Empty;
+                    //for (int i = 0; i < style.formatting.Count; i++)
+                    //    fontFormatting += style.formatting[i].Rtf;
+
+                    string thisFormatting = string.Empty;
+                    //for (int i = 0; i < formatting.Count; i++)
+                    //    thisFormatting += formatting[i].Rtf;
+
+                    string styleKeyCode = string.Empty;
+                    //for (int i = 0; i < style.keyCode.Count; i++)
+                    //    styleKeyCode += style.keyCode[i].Rtf;
+
+                    string thisKeyCode = string.Empty;
+                    //for (int i = 0; i < keyCode.Count; i++)
+                    //    thisKeyCode += keyCode[i].Rtf;
+
+                    return style.name == this.name
+                        && style.type == this.type
+                        && style.additive == this.additive
+                        && style.basedOn == this.basedOn
+                        && style.next == this.next
+                        && style.autoUpdate == this.autoUpdate
+                        && style.hidden == this.hidden
+                        && style.link == this.link
+                        && style.locked == this.locked
+                        && style.personal == this.personal
+                        && style.compose == this.compose
+                        && style.reply == this.reply
+                        && style.styrsid == this.styrsid
+                        && style.semiHidden == this.semiHidden
+                        && styleKeyCode == thisKeyCode
+                        && fontFormatting == thisFormatting;
+                }
+
+                return base.Equals(obj);
+            }
+
+            #endregion
         }
     }
 }
